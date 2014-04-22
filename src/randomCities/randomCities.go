@@ -1,3 +1,10 @@
+// Package that implementa utility to read a list of words from a file
+// and return a list of random words.
+//
+// input: cities_US.txt like (Abbeville Abbotsford Abbott Abbottsburg Abbottstown Abbyville Abell Abercrombie Aberdeen)
+// output: map[string]string like { A: Abell
+//                                  B: Bronwood }
+
 package RandomCities
 
 import (
@@ -8,11 +15,13 @@ import (
         "time"
 )
 
-//	Gets the words from the file and return them in a map.
+//	Gets the words from the file and return them in a map[uint8][]string.
 func getCitiesFromFile(filename string)  map[uint8][]string{
 	
+    // Create a map to save the cities:
     cities := make(map[uint8][]string)
 
+    // Open the file to read:
     bs, err := ioutil.ReadFile(filename)
     
     if err != nil {
@@ -21,10 +30,12 @@ func getCitiesFromFile(filename string)  map[uint8][]string{
 
     str := string(bs)
 
+    // Creates a scanner to read the file:
     scanner := bufio.NewScanner(strings.NewReader(str))
 
     scanner.Split(bufio.ScanLines)
 
+    // Read file line by line:
   	for scanner.Scan() {
   	    word := scanner.Text()
   	   	cities[word[0]] = append(cities[word[0]], word)
@@ -47,7 +58,7 @@ func RandomCities(inputFileName string) map[string]string{
 
     // Get cities from file sorted like this: { A: Abell, Avila...
     //                                          B: Barcelona, Bilbao... }
-    cities := getCitiesFromFile(inputFileName+".txt")
+    cities := getCitiesFromFile(inputFileName)
 
     randomCities := make(map[string]string)
 

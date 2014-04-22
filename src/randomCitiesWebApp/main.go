@@ -1,31 +1,23 @@
 package main
 
 import (
-	"io/ioutil"
 	"net/http"
     "html/template"
     "RandomCities"
 )
 
+// Available templates.
 var templates = template.Must(template.ParseFiles(
                 "view/cities.html",
 ))
 
+// Struct to save a webpage.
 type Page struct{
 	Title string
-	Body []byte
     RandomCities map[string]string
 }
 
-func loadPage(title string) (*Page, error) {
-    filename := title + ".txt"
-    body, err := ioutil.ReadFile(filename)
-    if err != nil {
-        return nil, err
-    }
-    return &Page{Title: title, Body: body}, nil
-}
-
+// Render templates.
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
     err := templates.ExecuteTemplate(w, tmpl+".html", p)
     if err != nil {
@@ -33,12 +25,15 @@ func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
     }
 }
 
+// Handler to show the random cities.
 func viewHandler(w http.ResponseWriter, r *http.Request) {
-    inputFileName := "input/US_Cities"
+    // File name:
+    inputFileName := "src/txt/US_Cities.txt"
+    // Gets randomCities from the file:
     randomCities := RandomCities.RandomCities(inputFileName)
-
-    page := Page{Title: "RandomCities", Body: []byte("null"), RandomCities: randomCities}
-    
+    //Creates page:
+    page := Page{Title: "RandomCities",  RandomCities: randomCities}
+    // Show Page:
     renderTemplate(w, "cities", &page)
 }
 
