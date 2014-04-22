@@ -1,0 +1,15 @@
+<!doctype HTML>
+<html>
+<head>
+	<title>{{.Title}}</title>
+</head>
+<body>
+	<h1>{{.Title}}</h1>
+
+	<ol>
+		{{range .RandomCities}}
+			<li>{{.}}</li>
+		{{end}}
+	</ol>
+</body>
+</html>
