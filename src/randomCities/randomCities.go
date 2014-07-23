@@ -64,7 +64,7 @@ func RandomCities(inputFileName string) map[string]string{
 
     // Get random cities and save in the file:
    	for k, _ := range cities {
-      randomCities[string(k)] = pickUpRandomCity(cities, k)
+       randomCities[string(k)] = pickUpRandomCity(cities, k)
    	}  
 
     return randomCities  

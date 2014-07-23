@@ -4,6 +4,7 @@ import (
 	"net/http"
     "html/template"
     "RandomCities"
+    "time"
 )
 
 // Available templates.
@@ -15,6 +16,7 @@ var templates = template.Must(template.ParseFiles(
 type Page struct{
 	Title string
     RandomCities map[string]string
+    Time int
 }
 
 // Render templates.
@@ -27,12 +29,20 @@ func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 
 // Handler to show the random cities.
 func viewHandler(w http.ResponseWriter, r *http.Request) {
+    t1 := time.Now().Nanosecond()
     // File name:
     inputFileName := "src/txt/US_Cities.txt"
     // Gets randomCities from the file:
     randomCities := RandomCities.RandomCities(inputFileName)
+
+    t2 := time.Now().Nanosecond()
+
+    t := t2 - t1
+
+    time := t / 1e6
+
     //Creates page:
-    page := Page{Title: "RandomCities",  RandomCities: randomCities}
+    page := Page{Title: "RandomCities",  RandomCities: randomCities, Time: time}
     // Show Page:
     renderTemplate(w, "cities", &page)
 }
