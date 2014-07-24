@@ -15,7 +15,7 @@ var templates = template.Must(template.ParseFiles(
 // Struct to save a webpage.
 type Page struct{
 	Title string
-    RandomCities map[string]string
+    Cities RandomCities.Cities
     Time int
 }
 
@@ -38,7 +38,7 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
     cities.New()
 
     // Gets randomCities from the file:
-    randomCities := cities.RandomCities(inputFileName)
+    cities.GetRandomCities(inputFileName)
 
     t2 := time.Now().Nanosecond()
 
@@ -47,7 +47,11 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
     time := t / 1e6
 
     //Creates page:
-    page := Page{Title: "RandomCities",  RandomCities: randomCities, Time: time}
+    page := Page{
+        Title: "RandomCities",
+        Cities: cities,
+        Time: time,
+    }
     // Show Page:
     renderTemplate(w, "cities", &page)
 }

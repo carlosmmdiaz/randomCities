@@ -5,16 +5,25 @@
 	<link rel="shortcut icon" href="logo.ico">
 </head>
 <body>
-	<h1>{{.Title}}</h1>
-
-	<ol>
-		{{range .RandomCities}}
-			<li>{{.}}</li>
-		{{end}}
-	</ol>
-    <h3>
-        Time : {{.Time}} milliseconds 
-        <button onClick="history.go(0)"> Refresh</button>
-    </h3>
+	<div>
+        <h1>{{.Title}}</h1>
+    	<ul>	
+            {{range $city := .Cities.RandomCities}}
+    			<li>{{$city}}</li>
+    		{{end}}
+    	</ul>
+        <h3>
+            Time : {{.Time}} milliseconds 
+            <button onClick="history.go(0)"> Get another list of RandomCites</button>
+        </h3>
+    </div>
+    <div>
+        <h1>Cities from the file</h1>
+        <ol>    
+            {{range $city := .Cities.List}}
+                <li>{{$city}}</li>
+            {{end}}
+        </ol>
+    </div>
 </body>
 </html>
