@@ -32,8 +32,13 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
     t1 := time.Now().Nanosecond()
     // File name:
     inputFileName := "src/txt/US_Cities.txt"
+
+    // Create the class cities:
+    var cities RandomCities.Cities
+    cities.New()
+
     // Gets randomCities from the file:
-    randomCities := RandomCities.RandomCities(inputFileName)
+    randomCities := cities.RandomCities(inputFileName)
 
     t2 := time.Now().Nanosecond()
 
