@@ -60,7 +60,10 @@ func (cities *Cities) pickUpRandomCity(k uint8, c chan string) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	randomNumber := rand.Intn(len(cities.List[k]))
 
+  // Choose a random city:
 	chosenCity := string(k) + " - " + cities.List[k][randomNumber]
+
+  // Save it in the channel:
   c <- chosenCity
 }
 
@@ -71,17 +74,17 @@ func (cities *Cities) GetRandomCities(inputFileName string) {
     //                                          B: Barcelona, Bilbao... }
     cities.getCitiesFromFile(inputFileName)
 
+    // Channel:
     c := make(chan string)
 
     // Get random cities and save in the file:
    	for k, _ := range cities.List {
-       go cities.pickUpRandomCity(k, c)
+      // Go routine:
+      go cities.pickUpRandomCity(k, c)
    	}
 
     for i := 0; i < len(cities.List); i++ {
       cities.RandomCities[uint8(i)] = <- c
     }
-
-
 }
 
