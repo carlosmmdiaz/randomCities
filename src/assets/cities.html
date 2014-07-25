@@ -1,0 +1,21 @@
+<!doctype HTML>
+<html>
+<head>
+	<title>{{.Title}}</title>
+	<link rel="shortcut icon" href="logo.ico">
+</head>
+<body>
+	<div>
+        <h1>{{.Title}}</h1>
+    	<ul>	
+            {{range $city := .Cities.RandomCities}}
+    			<li>{{$city}}</li>
+    		{{end}}
+    	</ul>
+        <h3>
+            Time : {{.Time}} milliseconds 
+        </h3>
+        <button onClick="history.go(0)"> Refresh RandomCites</button>
+    </div>
+</body>
+</html>

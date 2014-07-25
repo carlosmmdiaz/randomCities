@@ -5,53 +5,53 @@
 // output: map[string]string like { A: Abell
 //                                  B: Bronwood }
 
-package RandomCities
+package randomcities
 
 import (
-        "io/ioutil"
-        "strings"
-        "bufio"
-        "math/rand"
-        "time"
+	"bufio"
+	"io/ioutil"
+	"math/rand"
+	"strings"
+	"time"
 )
 
 // Struct to save and manage the cities from the file:
 type Cities struct {
-  List map[uint8][]string
-  RandomCities map[uint8]string
+	List         map[uint8][]string
+	RandomCities map[uint8]string
 }
 
 // Struct constructor:
 func (cities *Cities) New() {
-  
-  // Make the map:
-  cities.List = make(map[uint8][]string)
-  
-  // Create the final map:
-  cities.RandomCities = make(map[uint8]string)
+
+	// Make the map:
+	cities.List = make(map[uint8][]string)
+
+	// Create the final map:
+	cities.RandomCities = make(map[uint8]string)
 }
 
 //	Gets the words from the file and return them in a map[uint8][]string.
 func (cities *Cities) getCitiesFromFile(filename string) {
 
-    // Open the file to read:
-    bs, err := ioutil.ReadFile(filename)
-    
-    if err == nil {
-      
-      str := string(bs)
+	// Open the file to read:
+	bs, err := ioutil.ReadFile(filename)
 
-      // Creates a scanner to read the file:
-      scanner := bufio.NewScanner(strings.NewReader(str))
+	if err == nil {
 
-      scanner.Split(bufio.ScanLines)
+		str := string(bs)
 
-      // Read file line by line:
-      for scanner.Scan() {
-          word := scanner.Text()
-          cities.List[word[0]] = append(cities.List[word[0]], word)
-      }
-    } 
+		// Creates a scanner to read the file:
+		scanner := bufio.NewScanner(strings.NewReader(str))
+
+		scanner.Split(bufio.ScanLines)
+
+		// Read file line by line:
+		for scanner.Scan() {
+			word := scanner.Text()
+			cities.List[word[0]] = append(cities.List[word[0]], word)
+		}
+	}
 }
 
 // Picks up a random city and return it.
@@ -60,31 +60,30 @@ func (cities *Cities) pickUpRandomCity(k uint8, c chan string) {
 	rand.Seed(time.Now().UTC().UnixNano())
 	randomNumber := rand.Intn(len(cities.List[k]))
 
-  // Choose a random city:
+	// Choose a random city:
 	chosenCity := string(k) + " - " + cities.List[k][randomNumber]
 
-  // Save it in the channel:
-  c <- chosenCity
+	// Save it in the channel:
+	c <- chosenCity
 }
 
 // Returns the random cities:
 func (cities *Cities) GetRandomCities(inputFileName string) {
 
-    // Get cities from file sorted like this: { A: Abell, Avila...
-    //                                          B: Barcelona, Bilbao... }
-    cities.getCitiesFromFile(inputFileName)
+	// Get cities from file sorted like this: { A: Abell, Avila...
+	//                                          B: Barcelona, Bilbao... }
+	cities.getCitiesFromFile(inputFileName)
 
-    // Channel:
-    c := make(chan string)
+	// Channel:
+	c := make(chan string)
 
-    // Get random cities and save in the file:
-   	for k, _ := range cities.List {
-      // Go routine:
-      go cities.pickUpRandomCity(k, c)
-   	}
+	// Get random cities and save in the file:
+	for k, _ := range cities.List {
+		// Go routine:
+		go cities.pickUpRandomCity(k, c)
+	}
 
-    for i := 0; i < len(cities.List); i++ {
-      cities.RandomCities[uint8(i)] = <- c
-    }
+	for i := 0; i < len(cities.List); i++ {
+		cities.RandomCities[uint8(i)] = <-c
+	}
 }
-
