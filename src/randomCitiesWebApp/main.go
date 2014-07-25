@@ -47,8 +47,6 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 
     times := t / 1e6
 
-    time.Sleep(2)
-
     //Creates page:
     page := Page{
         Title: "RandomCities",
