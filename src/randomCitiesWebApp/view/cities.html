@@ -14,16 +14,8 @@
     	</ul>
         <h3>
             Time : {{.Time}} milliseconds 
-            <button onClick="history.go(0)"> Get another list of RandomCites</button>
         </h3>
-    </div>
-    <div>
-        <h1>Cities from the file</h1>
-        <ol>    
-            {{range $city := .Cities.List}}
-                <li>{{$city}}</li>
-            {{end}}
-        </ol>
+        <button onClick="history.go(0)"> Refresh RandomCites</button>
     </div>
 </body>
 </html>

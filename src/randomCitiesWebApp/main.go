@@ -29,6 +29,7 @@ func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 
 // Handler to show the random cities.
 func viewHandler(w http.ResponseWriter, r *http.Request) {
+    
     t1 := time.Now().Nanosecond()
     // File name:
     inputFileName := "src/txt/US_Cities.txt"
@@ -44,13 +45,15 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 
     t := t2 - t1
 
-    time := t / 1e6
+    times := t / 1e6
+
+    time.Sleep(2)
 
     //Creates page:
     page := Page{
         Title: "RandomCities",
         Cities: cities,
-        Time: time,
+        Time: times,
     }
     // Show Page:
     renderTemplate(w, "cities", &page)

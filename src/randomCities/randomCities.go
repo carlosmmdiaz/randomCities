@@ -18,7 +18,7 @@ import (
 // Struct to save and manage the cities from the file:
 type Cities struct {
   List map[uint8][]string
-  RandomCities map[string]string
+  RandomCities map[uint8]string
 }
 
 // Struct constructor:
@@ -28,7 +28,7 @@ func (cities *Cities) New() {
   cities.List = make(map[uint8][]string)
   
   // Create the final map:
-  cities.RandomCities = make(map[string]string)
+  cities.RandomCities = make(map[uint8]string)
 }
 
 //	Gets the words from the file and return them in a map[uint8][]string.
@@ -55,24 +55,33 @@ func (cities *Cities) getCitiesFromFile(filename string) {
 }
 
 // Picks up a random city and return it.
-func (cities *Cities) pickUpRandomCity(k uint8) string{
+func (cities *Cities) pickUpRandomCity(k uint8, c chan string) {
 
 	rand.Seed(time.Now().UTC().UnixNano())
 	randomNumber := rand.Intn(len(cities.List[k]))
 
-	return cities.List[k][randomNumber]
+	chosenCity := string(k) + " - " + cities.List[k][randomNumber]
+  c <- chosenCity
 }
 
-// Returns the random cities.
+// Returns the random cities:
 func (cities *Cities) GetRandomCities(inputFileName string) {
 
     // Get cities from file sorted like this: { A: Abell, Avila...
     //                                          B: Barcelona, Bilbao... }
     cities.getCitiesFromFile(inputFileName)
 
+    c := make(chan string)
+
     // Get random cities and save in the file:
    	for k, _ := range cities.List {
-       cities.RandomCities[string(k)] = string(k) + " - " + cities.pickUpRandomCity(k)
-   	}  
+       go cities.pickUpRandomCity(k, c)
+   	}
+
+    for i := 0; i < len(cities.List); i++ {
+      cities.RandomCities[uint8(i)] = <- c
+    }
+
+
 }
 
